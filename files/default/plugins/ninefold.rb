@@ -4,47 +4,60 @@
 
 require 'net/http'
 
-def get_router_ipaddress
-  catch :router_found do
-    %w(
-      /var/lib/dhclient/*
-      /var/lib/dhcp3/*
-      /var/lib/dhcp/*
-    ).each do |dir|
-      Dir.glob(dir).each do |file|
-        router = `grep 'dhcp-server-identifier' #{file} | tail -1 | awk '{print $NF}' | tr -d '\;'`
-        unless router.nil? or router.empty?
-          Chef::Log.debug "Found router '#{router}' in #{file}"
-          throw :router_found
-        end
+def get_router_list
+  router_list = []
+  %w(
+    /var/lib/dhclient/*
+    /var/lib/dhcp3/*
+    /var/lib/dhcp/*
+  ).each do |dir|
+    Dir.glob(dir).each do |file|
+      router = `grep 'dhcp-server-identifier' #{file} | tail -1 | awk '{print $NF}' | tr -d '\;'`
+      unless router.nil? or router.empty?
+        Chef::Log.debug "Ninefold: found virtual router '#{router}' in #{file}"
+        router_list << router
       end
     end
   end
-  router
+  router_list.uniq
 end
 
 def get_metadata(router, type)
   begin
     Net::HTTP.get(router, "/latest/meta-data/#{type}")
   rescue SocketError
-    Chef::Log.error "Error retrieving meta-data '#{type}' from '#{router}'"
+    Chef::Log.error "Ninefold: error retrieving meta-data '#{type}' from '#{router}'"
     nil
   end
 end
 
 provides 'ninefold'
-router = get_router_address
-if router
+
+router_list = get_router_list
+if router_list.empty?
+  Chef::Log.debug "Ninefold: meta-data not available - no virtual routers found"
+else
+
   ninefold Mash.new
+
+  # generate instance meta-data
   %w(
     availability-zone
     instance-id
     local-hostname
-    local-ipv4
     public-hostname
-    public-ipv4
     service-offering
   ).each do |key|
-    ninefold[key] = get_metadata(router, key)
+    ninefold[key] = get_metadata(router_list[0], key)
+  end
+
+  # generate router specific meta-data
+  %w(
+    local-ipv4
+    public-ipv4
+  ).each do |key|
+    router_list.each do |router|
+      ninefold[router][key] = get_metadata(router, key)
+    end
   end
 end
