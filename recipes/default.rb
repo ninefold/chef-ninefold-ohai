@@ -8,4 +8,5 @@
 #
 
 node.set['ohai']['plugins']['ninefold_ohai_plugins'] = 'plugins'
+
 include_recipe 'ohai'
