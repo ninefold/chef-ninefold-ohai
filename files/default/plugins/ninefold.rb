@@ -2,7 +2,6 @@
 # Provide Ninefold specific infrastructure information
 #
 
-provides 'ninefold'
 requires 'net/http'
 
 def get_router_ipaddress
@@ -33,6 +32,7 @@ def get_metadata(router, type)
   end
 end
 
+provides 'ninefold'
 router = get_router_address
 if router
   ninefold Mash.new

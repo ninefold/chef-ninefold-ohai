@@ -7,6 +7,6 @@
 # All rights reserved - Do Not Redistribute
 #
 
-node.set['ohai']['plugins']['ninefold_ohai_plugins'] = 'plugins'
+node.set['ohai']['plugins']['ninefold_ohai'] = 'plugins'
 
 include_recipe 'ohai'
