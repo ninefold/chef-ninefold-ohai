@@ -58,7 +58,7 @@ else
       local-ipv4
       public-ipv4
     ).each do |key|
-      router_mash[key] get_metadata(router, key)
+      router_mash[key] = get_metadata(router, key)
     end
     ninefold[router] = router_mash
   end
