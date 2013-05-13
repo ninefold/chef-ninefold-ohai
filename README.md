@@ -1,4 +1,7 @@
-chef-ninefold-ohai-plugins
-==========================
+# ninefold_ohai_plugins cookbook
 
-Plugins for ohai to expose ninefold cloud specific attributes
+Load custom ohai plugins using the 'ohai' cookbook. Include 'recipe[ninefold_ohai_plugins]' at the start of the runlist.
+
+# Author
+
+Author:: Ninefold Pty Limited (<warren@ninefold.com>)
