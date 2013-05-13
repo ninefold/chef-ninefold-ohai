@@ -2,7 +2,7 @@
 # Provide Ninefold specific infrastructure information
 #
 
-requires 'net/http'
+require 'net/http'
 
 def get_router_ipaddress
   catch :router_found do

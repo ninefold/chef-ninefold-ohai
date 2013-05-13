@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: ninefold_ohai_plugins
+# Cookbook Name:: ninefold_ohai
 # Recipe:: default
 #
 # Copyright (C) 2013 Ninefold Pty Limited
