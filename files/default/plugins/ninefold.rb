@@ -52,12 +52,14 @@ else
   end
 
   # generate router specific meta-data
-  %w(
-    local-ipv4
-    public-ipv4
-  ).each do |key|
-    router_list.each do |router|
-      ninefold[router][key] = get_metadata(router, key)
+  router_list.each do |router|
+    router_mash = Mash.new
+    %w(
+      local-ipv4
+      public-ipv4
+    ).each do |key|
+      router_mash[key] get_metadata(router, key)
     end
+    ninefold[router] = router_mash
   end
 end
