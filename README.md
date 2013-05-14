@@ -1,6 +1,6 @@
-# ninefold_ohai_plugins cookbook
+# ninefold_ohai cookbook
 
-Load custom ohai plugins using the 'ohai' cookbook. Include 'recipe[ninefold_ohai_plugins]' at the start of the runlist.
+Load custom ohai plugins using the 'ohai' cookbook. Include 'recipe[ninefold_ohai]' at the start of the runlist.
 
 # Author
 
