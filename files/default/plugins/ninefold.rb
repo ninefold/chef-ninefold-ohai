@@ -31,6 +31,7 @@ def get_metadata(router, type)
   end
 end
 
+
 provides 'ninefold'
 
 router_list = get_router_list
@@ -51,15 +52,17 @@ else
     ninefold[key] = get_metadata(router_list[0], key)
   end
 
-  # generate router specific meta-data
+  # generate network specific meta-data
+  ninefold['networks'] = Array.new
   router_list.each do |router|
     router_mash = Mash.new
+    router_mash['router'] = router
     %w(
       local-ipv4
       public-ipv4
     ).each do |key|
       router_mash[key] = get_metadata(router, key)
     end
-    ninefold[router] = router_mash
+    ninefold['networks'] << router_mash
   end
 end
