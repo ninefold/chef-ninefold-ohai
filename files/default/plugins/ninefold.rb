@@ -42,6 +42,7 @@ else
   ninefold Mash.new
 
   # generate instance meta-data
+
   %w(
     availability-zone
     instance-id
@@ -53,7 +54,9 @@ else
   end
 
   # generate network specific meta-data
+
   ninefold['networks'] = Array.new
+
   router_list.each do |router|
     router_mash = Mash.new
     router_mash['router'] = router
@@ -65,4 +68,5 @@ else
     end
     ninefold['networks'] << router_mash
   end
+
 end
