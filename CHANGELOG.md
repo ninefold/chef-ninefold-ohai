@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of ninefold_ohai.
 
+## 1.0.0
+
+* Improved installation process and public release
+
 ## 0.1.0
 
 * Initial release which creates 'ninefold' hash of cloudstack meta-data about the node (virtual server)
