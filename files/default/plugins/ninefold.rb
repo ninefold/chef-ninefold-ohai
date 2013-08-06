@@ -2,6 +2,8 @@
 # Provide Ninefold specific infrastructure information
 #
 
+provides 'ninefold'
+
 require 'net/http'
 
 def get_router_list
@@ -12,7 +14,7 @@ def get_router_list
     /var/lib/dhcp/*
   ).each do |dir|
     Dir.glob(dir).each do |file|
-      router = `grep 'dhcp-server-identifier' #{file} | tail -1 | awk '{print $NF}' | tr -d '\;'`
+      router = %x{grep 'dhcp-server-identifier' #{file} | tail -1 | awk '{print $NF}' | tr -d '\;'}
       unless router.nil? or router.empty?
         Chef::Log.debug "Ninefold: found virtual router '#{router}' in #{file}"
         router_list << router
@@ -31,8 +33,9 @@ def get_metadata(router, type)
   end
 end
 
-
-provides 'ninefold'
+def ninefoldnet?(ipaddr)
+  ipaddr.split('.').first = '172'
+end
 
 router_list = get_router_list
 if router_list.empty?
@@ -42,6 +45,9 @@ else
   ninefold Mash.new
 
   # generate instance meta-data
+  # prefer the non NinefoldNet router (172.x.y.z)
+
+  preferred_router = router_list.detect{|i| !ninefoldnet?(i)} || router_list.first
 
   %w(
     availability-zone
@@ -50,7 +56,13 @@ else
     public-hostname
     service-offering
   ).each do |key|
-    ninefold[key] = get_metadata(router_list[0], key)
+    ninefold[key] = get_metadata(preferred_router, key)
+  end
+
+  # surface public-ip address unless NinefoldNet router
+
+  unless ninefoldnet?(preferred_router)
+    ninefold['public-ipaddress'] = get_metadata(preferred_router, 'public-ipv4')
   end
 
   # generate network specific meta-data
