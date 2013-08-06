@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of ninefold_ohai.
 
+## 1.1.0
+
+* Refactor attributes to better surface network by router
+* Prefer non NinefoldNet router as the source of truth
+
 ## 1.0.0
 
 * Improved installation process and public release
