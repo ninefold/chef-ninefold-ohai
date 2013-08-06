@@ -34,8 +34,9 @@ def get_metadata(router, type)
 end
 
 def ninefoldnet?(ipaddr)
-  ipaddr.split('.').first = '172'
+  ipaddr.to_s.split('.').first == '172' rescue false
 end
+
 
 router_list = get_router_list
 if router_list.empty?
@@ -44,8 +45,8 @@ else
 
   ninefold Mash.new
 
-  # generate instance meta-data
-  # prefer the non NinefoldNet router (172.x.y.z)
+  # generate instance meta-data using other than the
+  # NinefoldNet router i.e. not 172.x.y.z if possible
 
   preferred_router = router_list.detect{|i| !ninefoldnet?(i)} || router_list.first
 
@@ -59,26 +60,18 @@ else
     ninefold[key] = get_metadata(preferred_router, key)
   end
 
-  # surface public-ip address unless NinefoldNet router
-
-  unless ninefoldnet?(preferred_router)
-    ninefold['public-ipaddress'] = get_metadata(preferred_router, 'public-ipv4')
-  end
-
   # generate network specific meta-data
 
-  ninefold['networks'] = Array.new
-
+  ninefold['networks'] = Mash.new
   router_list.each do |router|
     router_mash = Mash.new
-    router_mash['router'] = router
     %w(
       local-ipv4
       public-ipv4
     ).each do |key|
       router_mash[key] = get_metadata(router, key)
     end
-    ninefold['networks'] << router_mash
+    ninefold['networks'][router] = router_mash
   end
 
 end
