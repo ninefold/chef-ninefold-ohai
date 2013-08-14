@@ -14,7 +14,7 @@ def get_router_list
     /var/lib/dhcp/*
   ).each do |dir|
     Dir.glob(dir).each do |file|
-      router = %x{grep 'dhcp-server-identifier' #{file} | tail -1 | awk '{print $NF}' | tr -d '\;'}
+      router = %x{grep 'dhcp-server-identifier' #{file} | tail -1 | awk '{print $NF}' | tr -d '\;'}.chomp
       unless router.nil? or router.empty?
         Chef::Log.debug "Ninefold: found virtual router '#{router}' in #{file}"
         router_list << router
