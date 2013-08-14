@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of ninefold_ohai.
 
+## 1.1.2
+
+* Bring version and tag refs into alignment!
+
 ## 1.1.1
 
 * Remove explicit cookbook deps to avoid conflicts with ninefold_app cookbook deps
