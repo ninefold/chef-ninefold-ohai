@@ -26,9 +26,11 @@ end
 
 def get_metadata(router, type)
   begin
-    Net::HTTP.get(router, "/latest/meta-data/#{type}")
-  rescue SocketError
-    Chef::Log.error "Ninefold: error retrieving meta-data '#{type}' from '#{router}'"
+    response = Net::HTTP.get(router, "/latest/meta-data/#{type}")
+    raise "router returned metadata not found" if response.downcase.include?('404 not found')
+    response
+  rescue => e
+    Chef::Log.error "Ninefold: error retrieving meta-data '#{type}' from '#{router}' -> '#{e.message}'"
     nil
   end
 end
