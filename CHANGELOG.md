@@ -1,6 +1,11 @@
-# CHANGELOG for ninefold_ohai
+# CHANGELOG for ninefold\_ohai
 
-This file is used to list changes made in each version of ninefold_ohai.
+This file is used to list changes made in each version of ninefold\_ohai.
+
+## 1.1.3
+
+* Handle 404 error returned from router for metdata missing so that
+  attribute gets nil rather than a massive HTML string
 
 ## 1.1.2
 
@@ -8,7 +13,7 @@ This file is used to list changes made in each version of ninefold_ohai.
 
 ## 1.1.1
 
-* Remove explicit cookbook deps to avoid conflicts with ninefold_app cookbook deps
+* Remove explicit cookbook deps to avoid conflicts with ninefold\_app cookbook deps
 
 ## 1.1.0
 
@@ -23,5 +28,5 @@ This file is used to list changes made in each version of ninefold_ohai.
 
 * Initial release which creates 'ninefold' hash of cloudstack meta-data about the node (virtual server)
 
-- - - 
+- - -
 Check the [Markdown Syntax Guide](http://daringfireball.net/projects/markdown/syntax) for help with Markdown.
