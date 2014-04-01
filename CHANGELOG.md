@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of ninefold\_ohai.
 
+## 1.1.4
+
+* Ignore non-existent virtual routers which are hangovers from
+  DHCP leases on the machine that was templated to create this server
+
 ## 1.1.3
 
 * Handle 404 error returned from router for metdata missing so that
