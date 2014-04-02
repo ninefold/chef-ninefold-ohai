@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of ninefold\_ohai.
 
+## 1.1.5
+
+* Fix error testing for empty router list
+
 ## 1.1.4
 
 * Ignore non-existent virtual routers which are hangovers from
