@@ -6,6 +6,41 @@ provides 'ninefold'
 
 require 'net/http'
 
+def get_router_list
+  router_list = []
+  %w(
+    /var/lib/dhclient/*
+    /var/lib/dhcp3/*
+    /var/lib/dhcp/*
+  ).each do |dir|
+    Dir.glob(dir).each do |file|
+      router = %x{grep 'dhcp-server-identifier' #{file} | tail -1 | awk '{print $NF}' | tr -d '\;'}.chomp
+      unless router.nil? || router.empty?
+        Chef::Log.debug "Ninefold: found virtual router '#{router}' in #{file}"
+        router_list << router
+      end
+    end
+  end
+  router_list.uniq
+end
+
+def get_metadata(router, type)
+  begin
+    response = Net::HTTP.get(router, "/latest/meta-data/#{type}")
+    raise "router returned meta-data not found" if response.downcase.include?('404 not found')
+    response
+  rescue => e
+    Chef::Log.debug "Ninefold: error retrieving meta-data '#{type}' from '#{router}' -> '#{e.message}'"
+    nil
+  end
+end
+
+def ninefoldnet?(ipaddr)
+  ipaddr.to_s.split('.').first == '172' rescue false
+end
+
+# the main business starts here
+
 router_list = get_router_list
 
 if router_list.empty?
@@ -42,42 +77,9 @@ else
       metadata = get_metadata(router, key)
       router_mash[key] = metadata if metadata
     end
-    ninefold['networks'][router] = router_mash unless router_mash.empty?
-  end
-end
-
-private
-
-def get_router_list
-  router_list = []
-  %w(
-    /var/lib/dhclient/*
-    /var/lib/dhcp3/*
-    /var/lib/dhcp/*
-  ).each do |dir|
-    Dir.glob(dir).each do |file|
-      router = %x{grep 'dhcp-server-identifier' #{file} | tail -1 | awk '{print $NF}' | tr -d '\;'}.chomp
-      unless router.nil? or router.empty?
-        Chef::Log.debug "Ninefold: found virtual router '#{router}' in #{file}"
-        router_list << router
-      end
+    unless router_mash.nil? || router_mash.empty?
+      ninefold['networks'][router] = router_mash
     end
   end
-  router_list.uniq
-end
-
-def get_metadata(router, type)
-  begin
-    response = Net::HTTP.get(router, "/latest/meta-data/#{type}")
-    raise "router returned metadata not found" if response.downcase.include?('404 not found')
-    response
-  rescue => e
-    Chef::Log.debug "Ninefold: error retrieving meta-data '#{type}' from '#{router}' -> '#{e.message}'"
-    nil
-  end
-end
-
-def ninefoldnet?(ipaddr)
-  ipaddr.to_s.split('.').first == '172' rescue false
 end
 
