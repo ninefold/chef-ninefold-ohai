@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of ninefold\_ohai.
 
+## 1.1.6
+
+* Ensure read timeout to eliminate delay from stale leases
+
 ## 1.1.5
 
 * Fix error testing for empty router list
