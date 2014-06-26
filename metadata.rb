@@ -4,7 +4,7 @@ maintainer_email "warren@ninefold.com"
 license          "All rights reserved"
 description      "Installs/Configures ninefold ohai plugins"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "1.1.6"
+version          "1.2.0"
 
 depends "ohai"
 depends "chef-client"
