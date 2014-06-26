@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of ninefold\_ohai.
 
+## 1.2.0
+
+* Update format of plug-in to the new Ohai 7 standard
+
 ## 1.1.6
 
 * Ensure read timeout to eliminate delay from stale leases
